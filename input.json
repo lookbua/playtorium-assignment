@@ -1,0 +1,68 @@
+{
+	"shopping_cart": [
+		{
+			"name": "T-Shirt",
+			"amount": "1",
+			"price": "22.45",
+			"category": "Clothing"
+		},
+		{
+			"name": "Hoodie",
+			"amount": 1,
+			"price": 25.99,
+			"category": "Clothing"
+		},
+		{
+			"name": "T-Shirt",
+			"amount": "1",
+			"price": 223.01,
+			"category": "Clothing"
+		},
+		{
+			"name": "Watch",
+			"amount": "2",
+			"price": 139.275,
+			"category": "Electronics"
+		},
+		{
+			"name": "Bag",
+			"amount": 1,
+			"price": 90.00,
+			"category": "Accessories"
+		}
+	],
+	"discount campaigns": [
+		{
+			"name": "Percentage discount",
+			"parameter": {
+				"percentage": 0.1
+			}
+		},
+		{
+			"name": "Fixed amount",
+			"parameter": {
+				"amount": 60
+			}
+		},
+		{
+			"name": "Percentage discount by item category",
+			"parameter": {
+				"category": "ElEctronics",
+				"amount": 75
+			}
+		},
+		{
+			"name": "Special campaigns",
+			"parameter": {
+				"every": "300",
+				"discount": 3
+			}
+		},
+		{
+			"name": "Discount by points",
+			"parameter": {
+				"points": 109
+			}
+		}
+	]
+}
