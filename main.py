@@ -9,14 +9,11 @@ original_value = OriginalValue()
 discount_cal = DiscountCalculation()
 price_controller = Price_controller(data_input, original_value, discount_cal)
 
+
 def calculating():
     return price_controller.final_price()
 
+
 if __name__ == "__main__":
     result = calculating()
-    print(result)  
-    
-
-
-
-
+    print(result)

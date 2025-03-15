@@ -3,25 +3,31 @@
 		{
 			"name": "T-Shirt",
 			"amount": "1",
-			"price": "22.45",
+			"price": "2590",
 			"category": "Clothing"
 		},
 		{
 			"name": "Hoodie",
 			"amount": 1,
-			"price": 25.99,
+			"price": 110.00,
 			"category": "Clothing"
 		},
 		{
 			"name": "T-Shirt",
-			"amount": "1",
-			"price": 223.01,
+			"amount": 1.000,
+			"price": 223.50,
 			"category": "Clothing"
 		},
 		{
 			"name": "Watch",
 			"amount": "2",
-			"price": 139.275,
+			"price": 2000.25,
+			"category": "Electronics"
+		},
+		{
+			"name": "Iron",
+			"amount": "2",
+			"price": "250.00",
 			"category": "Electronics"
 		},
 		{
@@ -29,13 +35,45 @@
 			"amount": 1,
 			"price": 90.00,
 			"category": "Accessories"
+		},
+		{
+			"name": "Ear Rings",
+			"amount": 3,
+			"price": "50.166666667",
+			"category": "Accessories"
+		},
+		{
+			"name": "Skirt",
+			"amount": 3,
+			"price": "100.00",
+			"category": "Clothing"
 		}
 	],
 	"discount campaigns": [
 		{
-			"name": "Percentage discount",
+			"name": "Special campaigns",
 			"parameter": {
-				"percentage": 0.1
+				"every": "990.00",
+				"discount": "345.00"
+			}
+		},
+		{
+			"name": "Discount by points",
+			"parameter": {
+				"points": 3030
+			}
+		},
+		{
+			"name": "Percentage discount by item category",
+			"parameter": {
+				"category": "Clothing",
+				"amount": 23
+			}
+		},
+		{
+			"name": "Fixed amount",
+			"parameter": {
+				"amount": 1000
 			}
 		},
 		{
@@ -45,17 +83,9 @@
 			}
 		},
 		{
-			"name": "Percentage discount by item category",
+			"name": "Percentage discount",
 			"parameter": {
-				"category": "ElEctronics",
-				"amount": 75
-			}
-		},
-		{
-			"name": "Special campaigns",
-			"parameter": {
-				"every": "300",
-				"discount": 3
+				"percentage": "30.00"
 			}
 		},
 		{

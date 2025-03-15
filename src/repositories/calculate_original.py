@@ -1,31 +1,54 @@
 class OriginalValue:
     def original_price(self, cart):
+        """
+        Calculates the discount value based on the campaign.
+
+        Parameters:
+            category_price
+            final_campaign (list of dict): A list of dictionaries representing the final campaigns after eliminating duplicates in the same category, where each dictionary contains:
+                - 'name' (str): The name of the campaign.
+                - 'parameter' (dict): A dictionary containing the campaign parameters and their associated values.
+            price (float): The total price of the shopping cart.
+            category_price (list of dict): A list of dictionaries, where each dictionary represents the price for each category, containing:
+                - 'category_name' (str): The name of the category.
+                - 'price' (float): The total price of that category in the shopping cart.
+
+        Returns:
+            int or float: The final price after calculating.
+        """
         original_price = 0
         category_price = {}
 
         for item in cart:
             try:
-                amount = float(item['amount'])
-                price = float(item['price'])
-                if not amount.is_integer():  
-                    print(f"Wrong input format: amount should be a whole number for {item['name']} item")
+                amount = float(item["amount"])
+                price = float(item["price"])
+                if not amount.is_integer():
+                    print(
+                        f"Wrong input format: amount should be a whole number for {item['name']} item"
+                    )
                     raise ValueError
                 amount = int(amount)
             except ValueError:
-                print(f"Wrong input format: amount and price should be valid numbers for {item['name']} item")
+                print(
+                    f"Wrong input format: amount and price should be valid numbers for {item['name']} item"
+                )
                 raise ValueError
             if amount < 0 or price < 0:
-                print(f"Wrong input format: amount and price should be positive numbers for {item['name']} item")
+                print(
+                    f"Wrong input format: amount and price should be positive numbers for {item['name']} item"
+                )
                 raise ValueError
-            
-            
+
             current_price = amount * price
             original_price += current_price
 
             if not isinstance(item["category"], str):
-                print(f"Wrong input format: Category of {item['name']} should be string and can belong to only one category")
+                print(
+                    f"Wrong input format: Category of {item['name']} should be string and can belong to only one category"
+                )
                 raise ValueError("Wrong input format")
-                
+
             category = item["category"]
             if category in category_price:
                 category_price[category] += current_price
