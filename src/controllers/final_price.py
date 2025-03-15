@@ -27,15 +27,13 @@ class Price_controller:
                 f"The final price is {final_price if final_price > 0 else 0:.2f} BAHT"
             )
         except Exception as e:
-            return "There is an error in getting final price"
+            return f"There is an error in getting final price: {e}"
 
     def get_data(self):
         try:
-            cart, campaign = self.data_input.load_input(self)
-            original_price, category_price = self.original_value.original_price(
-                self, cart
-            )
-            final_campaign = self.original_value.original_campaign(self, campaign)
+            cart, campaign = self.data_input.load_input()
+            original_price, category_price = self.original_value.original_price(cart)
+            final_campaign = self.original_value.original_campaign(campaign)
             print(
                 "\noriginal_price",
                 original_price,
@@ -46,7 +44,7 @@ class Price_controller:
             )
             return final_campaign, original_price, category_price
         except Exception as e:
-            print("There is an error in getting data")
+            print(f"There is an error in getting data: {e}")
             raise e
 
     def discount_value(self, final_campaign, price, category_price):
@@ -65,63 +63,25 @@ class Price_controller:
                 points = parameters.get("points", 0)
                 every = parameters.get("every", 0)
                 discount = parameters.get("discount", 0)
-
-                if campaign["name"] == "fixed amount":
-                    price = self.discount_cal.fixed_amount(
-                        self, amount=amount_fixed, total_amount=price
-                    )
-                    category_price = self.discount_cal.update_category_price(
-                        self, category_price=category_price, discount_amount=amount_fixed
-                    )
-                    print("price", price, "category_price", category_price)
-
-                elif campaign["name"] == "percentage discount":
-                    price, discount_amount = self.discount_cal.percentage_discount(
-                        self,
-                        percentage=percentage,
-                        total_amount=price,
-                    )
-                    category_price = self.discount_cal.update_category_price(
-                        self, category_price=category_price, discount_amount=discount_amount
-                    )
-                    print("price", price, "category_price", category_price)
-
-                if campaign["name"] == "percentage discount by item category":
-                    category_price, price = (
-                        self.discount_cal.percentage_discount_by_item_category(
-                            self,
-                            amount=amount_item,
-                            category=campaign.get("parameter", {}).get("category").lower(),
-                            category_price=category_price,
-                        )
-                    )
-                    print("price", price, "category_price", category_price)
-                elif campaign["name"] == "discount by points":
-                    price, discount_amount = self.discount_cal.discount_by_points(
-                        self,
-                        points=points,
-                        total_amount=price,
-                    )
-                    category_price = self.discount_cal.update_category_price(
-                        self, category_price=category_price, discount_amount=discount_amount
-                    )
-                    print("price", price, "category_price", category_price)
-
-                if campaign["name"] == "special campaigns":
-                    price, discount_amount = self.discount_cal.special_campaign(
-                        self,
-                        every=every,
-                        discount=discount,
-                        total_amount=price,
-                    )
-                    category_price = self.discount_cal.update_category_price(
-                        self, category_price=category_price, discount_amount=discount_amount
-                    )
-                    print("price", price, "category_price", category_price)
-
+                campaign_actions = {
+                    "fixed amount": lambda: self.discount_cal.fixed_amount(amount_fixed, price),
+                    "percentage discount": lambda: self.discount_cal.percentage_discount(percentage, price),
+                    "percentage discount by item category": lambda: self.discount_cal.percentage_discount_by_item_category(amount_item, campaign.get("parameter", {}).get("category").lower(), category_price),
+                    "discount by points": lambda: self.discount_cal.discount_by_points(points, price),
+                    "special campaigns": lambda: self.discount_cal.special_campaign(every, discount, price),
+                }
+                if campaign["name"] in campaign_actions:
+                    result = campaign_actions[campaign["name"]]()
+                    if campaign["name"] == "percentage discount by item category":
+                        category_price, price = result
+                        discount_amount = price 
+                    else:
+                        price, discount_amount = result
+                        category_price = self.discount_cal.update_category_price(category_price, discount_amount)                    
+                    print("price", price, "\ncategory_price", category_price)
             return price
         except Exception as e:
-            print("There is an error in getting discount value")
+            print(f"There is an error in getting discount value: {e}")
             raise e
 
     def get_valid_parameters(self, final_campaign):
@@ -141,6 +101,11 @@ class Price_controller:
             points = campaign.get("parameter", {}).get("points", 0)
             every = campaign.get("parameter", {}).get("every", 0)
             discount = campaign.get("parameter", {}).get("discount", 0)
+            
+            if campaign["name"] == "percentage discount by item category":
+                if not isinstance(campaign.get("parameter", {}).get("category"), str):
+                    print(f"Wrong input format: For Percentage discount by item category campaign, the category should be string")
+                    raise ValueError("Wrong input format")
 
             parameters = {
                 "amount_fixed": amount_fixed,
@@ -151,7 +116,6 @@ class Price_controller:
                 "discount": discount,
             }
 
-            # Validate each parameter and update the highest value
             for param, value in parameters.items():
                 try:
                     value = float(value)
@@ -166,7 +130,7 @@ class Price_controller:
                     highest_values[param] = value
             
             if highest_values['discount'] > highest_values['every']:
-                    print(f"Wrong input format: discount should be less than interval itself")
-                    raise ValueError("Wrong input format")
+                print(f"Wrong input format: For Special campaigns, discount should be less than interval itself")
+                raise ValueError("Wrong input format")
 
         return highest_values

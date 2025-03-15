@@ -1,15 +1,16 @@
 class OriginalValue:
-    def __init__(self):
-        pass
-
     def original_price(self, cart):
         original_price = 0
         category_price = {}
 
         for item in cart:
             try:
-                amount = int(item['amount'])
+                amount = float(item['amount'])
                 price = float(item['price'])
+                if not amount.is_integer():  
+                    print(f"Wrong input format: amount should be a whole number for {item['name']} item")
+                    raise ValueError
+                amount = int(amount)
             except ValueError:
                 print(f"Wrong input format: amount and price should be valid numbers for {item['name']} item")
                 raise ValueError
@@ -21,6 +22,10 @@ class OriginalValue:
             current_price = amount * price
             original_price += current_price
 
+            if not isinstance(item["category"], str):
+                print(f"Wrong input format: Category of {item['name']} should be string and can belong to only one category")
+                raise ValueError("Wrong input format")
+                
             category = item["category"]
             if category in category_price:
                 category_price[category] += current_price
@@ -34,7 +39,6 @@ class OriginalValue:
         return original_price, category_price_list
 
     def original_campaign(self, campaign):
-        # final campaign list => if it is the same type, eliminate the latter one that is included
         final_campaign = []
         added_categories = set()
         campaign_type_map = {
@@ -50,4 +54,6 @@ class OriginalValue:
             if campaign_type and campaign_type not in added_categories:
                 final_campaign.append(item)
                 added_categories.add(campaign_type)
+        category_order = {"coupon": 0, "on top": 1, "seasonal": 2}
+        final_campaign.sort(key=lambda x: category_order[campaign_type_map[x["name"]]])
         return final_campaign

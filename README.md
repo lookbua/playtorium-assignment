@@ -6,6 +6,7 @@ Assumptions:
 3. The discount for each category that was applied to the total price will be subtracted based on its proportion to the total price.
 4. For the "Percentage Discount by Item Category" campaign, it can only apply a discount to one category per coupon.
 5. For "Special campaigns", if discount Y is greater than every X, it is considered an invalid input.
+6. Each item in shoping cart can belong to only one category
 
 
 
